@@ -5,17 +5,19 @@
 # A Python script for parsing the model returned by sat solvers
 
 import argparse, math, sys
-
 from typing import Tuple, List
 
-def parse_arg() -> Tuple[str, int]:
+def parse_arg() -> Tuple[str, int, int]:
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--input", required=True,
                         help="Path to the input.")
     parser.add_argument("-d", "--dim", required=True,
                         help="Dimension of the maze.", type=int)
+    parser.add_argument("-s", "--step", required=True,
+                        help="Number of steps.", type=int)
     args = vars(parser.parse_args(sys.argv[1:]))
-    return (args['input'], int(args['dim']))
+    return (args['input'], int(args['dim']), int(args['step']))
+
 
 def read_model_array(input: List[str]) -> List[int]:
     model = []
@@ -29,18 +31,20 @@ def read_model_array(input: List[str]) -> List[int]:
                     model.append(0)
     return model
 
+
 def offset_to_pos(offset: int, dim: int):
     return (offset // dim, offset % dim)
 
+
 def parse_result():
-    filename, dim = parse_arg()
+    filename, dim, step = parse_arg()
     num_bits = math.ceil(math.log2(dim * dim))
     model = None
     with open(filename) as f:
         lines = f.readlines()
         model = read_model_array(lines)
     result = []
-    for i in range(0, len(model) // num_bits):
+    for i in range(0, step + 1):
         idx = 0
         for j in range(0, num_bits):
             idx += model[i * num_bits + j] << (num_bits - j - 1)
