@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Author: Guangchen Li (guangchenli96@gmail.com)
+# A shell script that automates the bmc process
+
 INPUT_FILE=$1
 MAX_STEPS=$2
 SOLVER_PATH=$3
